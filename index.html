@@ -277,7 +277,7 @@
   ];
   var LEAF_SECRETS = [
     'ใบมินต์นี้แทนความสดชื่นในทุกวันที่คุยกับคุณครับ 🍃',
-    'ใบสุดท้าย: มีคุณแล้วมันดีไปหมดเลยครับ 🌿'
+    'ใบสุดท้าย: มีคุณแล้วมันดีไปหมดเลยครับ อยู่ด้วยกันนานๆนะครับ 🌿'
   ];
   function spawnFloat(host, text, xPct) { var f = el('span', 'floatup', text); f.style.left = xPct + '%'; f.style.top = '4%'; host.appendChild(f); setTimeout(function () { f.remove(); }, 1000); }
 
@@ -483,6 +483,7 @@
       else if (score === 69) scorePopup.textContent = 'แน่ะ ชอบเลขนี้หรอครับ 🤭';
       else if (score <= 75) scorePopup.textContent = 'อุ้ย ชอบมากกว่าครึ่งแล้วด้วยหรอครับ 🤭';
       else if (score === 88) scorePopup.textContent = 'ขอให้ชอบผมแบบ infinity เลยนะครับ 🤭';
+      else if (score === 99) scorePopup.textContent = 'อีก 1% ที่เหลือ ผมขอไว้ที่ผมเหมือนกันได้ไหมครับอ้วง 🤭';
       else scorePopup.textContent = 'หลวมตัวลงมาแล้ว ไม่ให้ขึ้นไปแล้วนะครับ 😳';
     }
     slider.addEventListener('input', updateScore); updateScore();
