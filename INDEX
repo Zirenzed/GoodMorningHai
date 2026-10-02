@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="ชวนดื่มกาแฟยามเช้ากันครับ">
+<meta name="theme-color" content="#F6E3C5">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>☕</text></svg>">
+<title>ชวนดื่มกาแฟยามเช้า</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sriracha&family=Noto+Sans+Thai+Looped:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sky-top: #FFEFD6; --sky-bottom: #FBD9B0;
+    --text: #4A2C18; --muted: #8A6A4E;
+    --amber: #C97A3B; --amber-ink: #FFF8EC;
+    --line: rgba(74, 44, 24, .22);
+    --dot: rgba(74, 44, 24, .18);
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --sky-top: #3A2A1C; --sky-bottom: #2A1D13; --text: #FBEFD9; --muted: #CBB190; --line: rgba(251, 239, 217, .25); --dot: rgba(251, 239, 217, .2); --amber-ink: #3A2412; } }
+  :root[data-theme="dark"] { --sky-top: #3A2A1C; --sky-bottom: #2A1D13; --text: #FBEFD9; --muted: #CBB190; --line: rgba(251, 239, 217, .25); --dot: rgba(251, 239, 217, .2); --amber-ink: #3A2412; }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); -webkit-text-size-adjust: 100%; }
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; min-height: 100%; }
+  body {
+    background: linear-gradient(180deg, var(--sky-top), var(--sky-bottom)) fixed;
+    background-color: var(--sky-top);
+    color: var(--text);
+    font-family: "Noto Sans Thai Looped", "Sarabun", Tahoma, sans-serif;
+    display: flex; justify-content: center; align-items: center;
+    min-height: calc(100vh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+    min-height: calc(100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+    padding: 28px 20px;
+    overscroll-behavior: none;
+  }
+  main { width: 100%; max-width: 440px; text-align: center; }
+  @media (min-width: 860px) { main { max-width: 560px; } }
+  .step { display: flex; justify-content: center; gap: 8px; margin: 0 0 16px; }
+  .step span { width: 8px; height: 8px; border-radius: 99px; background: var(--dot); transition: width .2s ease, background .2s ease; }
+  .step span.on { width: 26px; background: var(--amber); }
+  h1 {
+    font-family: "Sriracha", "Noto Sans Thai Looped", Tahoma, sans-serif;
+    font-weight: 400; font-size: clamp(1.7rem, 6.6vw, 2.4rem);
+    line-height: 1.4; margin: 4px 0 6px; text-wrap: balance;
+  }
+  .sub { font-size: 1rem; line-height: 1.75; color: var(--muted); margin: 0 auto 6px; max-width: 32ch; }
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-height: 52px; min-width: 116px; padding: 10px 30px;
+    border-radius: 999px; font: 600 1.05rem "Noto Sans Thai Looped", Tahoma, sans-serif;
+    text-decoration: none; cursor: pointer; border: 2px solid transparent;
+    -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+    transition: transform .15s ease, filter .15s ease, border-color .15s ease;
+  }
+  .btn:focus-visible { outline: 3px solid var(--text); outline-offset: 3px; }
+  .btn-main { background: var(--amber); color: var(--amber-ink); }
+  .btn-main:hover { filter: brightness(1.08); transform: translateY(-2px); }
+  .btn-alt { background: rgba(74,44,24,.06); color: var(--text); border-color: var(--line); }
+  .actions { display: flex; justify-content: center; margin-top: 20px; }
+  .counter { font: 600 1rem "Noto Sans Thai Looped", Tahoma, sans-serif; color: var(--amber); margin: 10px 0 0; }
+  .stage {
+    position: relative; width: 100%; max-width: 380px; height: 260px;
+    margin: 18px auto 0; border-radius: 22px; overflow: hidden;
+    background: radial-gradient(120% 90% at 30% 15%, #FFF3DD, transparent 60%), linear-gradient(180deg, #FDE3C0, #F7CFA0);
+    border: 2px solid rgba(201, 122, 59, .35);
+  }
+  .stage .fleck-bg { position: absolute; border-radius: 50%; background: #FFF8EC; animation: flicker linear infinite; }
+  @keyframes flicker { 0%, 100% { opacity: .18; } 50% { opacity: .6; } }
+  .cup-stage { height: 300px; display: flex; align-items: flex-end; justify-content: center; }
+  .char-wrap { width: min(66%, 220px); position: relative; }
+  .char-wrap svg { width: 100%; height: auto; display: block; overflow: visible; }
+  .hit-body, .hit-steam, .hit-foam { cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  .pupil { transition: transform .08s linear; }
+  .steam-g { transform-box: fill-box; transform-origin: 50% 100%; animation: steamSway 2s ease-in-out infinite; }
+  .steam-g.flick { animation: steamFlick .4s ease-in-out 2; }
+  @keyframes steamSway { 0%, 100% { transform: rotate(-4deg); } 50% { transform: rotate(5deg); } }
+  @keyframes steamFlick { 0%, 100% { transform: rotate(-11deg) scale(1.05); } 50% { transform: rotate(12deg) scale(1.12); } }
+  .eyes-open, .eyes-purr, .eyes-annoyed, .mouth-n, .mouth-purr, .mouth-annoyed, .blush { transition: opacity .12s ease; }
+  .eyes-purr, .mouth-purr, .eyes-annoyed, .mouth-annoyed, .blush { opacity: 0; }
+  .char-wrap[data-mood="purr"] .eyes-open, .char-wrap[data-mood="purr"] .mouth-n { opacity: 0; }
+  .char-wrap[data-mood="purr"] .eyes-purr, .char-wrap[data-mood="purr"] .mouth-purr, .char-wrap[data-mood="purr"] .blush { opacity: 1; }
+  .char-wrap[data-mood="annoyed"] .eyes-open, .char-wrap[data-mood="annoyed"] .mouth-n { opacity: 0; }
+  .char-wrap[data-mood="annoyed"] .eyes-annoyed, .char-wrap[data-mood="annoyed"] .mouth-annoyed { opacity: 1; }
+  .sun-btn { position: absolute; top: 5%; right: 7%; font-size: 2.1rem; line-height: 1; background: none; border: 0; cursor: pointer; -webkit-tap-highlight-color: transparent; transition: transform .25s ease; filter: drop-shadow(0 0 10px rgba(255, 210, 120, .6)); }
+  .sun-btn.pulse { animation: sunPulse .5s ease; }
+  @keyframes sunPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.25); } }
+  .sparkle { position: absolute; border-radius: 50%; background: #FFF3DD; animation: pop .4s ease; }
+  .sparkle.bright { background: #FFF8EC; box-shadow: 0 0 10px 3px rgba(255, 220, 150, .9); }
+  @keyframes pop { 0% { transform: scale(0); opacity: 0; } 60% { transform: scale(1.3); opacity: 1; } 100% { transform: scale(1); } }
+  .bean-btn { position: absolute; font-size: 1.25rem; line-height: 1; background: none; border: 0; cursor: pointer; -webkit-tap-highlight-color: transparent; transform: translate(-50%, -50%); filter: drop-shadow(0 0 4px rgba(201, 122, 59, .5)); }
+  .bean-btn.falling { animation: beanFall .55s ease-in forwards; }
+  @keyframes beanFall { to { transform: translate(calc(-50% + 50px), calc(-50% + 90px)) scale(.3); opacity: 0; } }
+  .ask-more { margin-top: 18px; padding: 14px 16px; border-radius: 18px; border: 2px dashed var(--line); background: rgba(74, 44, 24, .04); }
+  .ask-more p { font-family: "Sriracha", "Noto Sans Thai Looped", Tahoma, sans-serif; font-size: 1.1rem; margin: 0 0 12px; color: var(--amber); }
+  .ask-more .actions { margin-top: 0; gap: 10px; }
+  .ask-more .btn { min-width: 96px; min-height: 44px; padding: 8px 18px; font-size: .95rem; }
+  .score-card { width: min(100%, 380px); margin: 18px auto 0; text-align: center; }
+  .score-title { margin: 0 0 10px; text-align: center; font-size: 1.05rem; line-height: 1.6; color: var(--text); }
+  .score-value { display: block; text-align: center; color: var(--amber); font-family: "Sriracha", "Noto Sans Thai Looped", Tahoma, sans-serif; font-size: clamp(3.4rem, 14vw, 4.6rem); font-weight: 400; line-height: 1.1; font-variant-numeric: tabular-nums; margin: 4px 0 8px; }
+  .score-slider {
+    display: block !important; visibility: visible !important; opacity: 1 !important;
+    position: relative; z-index: 2; -webkit-appearance: none; appearance: none;
+    --pct: 50%; width: 100%; min-height: 36px; height: 36px; margin: 10px 0 0; padding: 0;
+    background: transparent; cursor: pointer; touch-action: pan-y;
+  }
+  .score-slider::-webkit-slider-runnable-track { height: 12px; border-radius: 99px; background: linear-gradient(90deg, var(--amber) var(--pct, 50%), rgba(74,44,24,.16) var(--pct, 50%)); }
+  .score-slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 30px; height: 30px; margin-top: -9px; border-radius: 50%; background: var(--amber); border: 3px solid #FFF3DD; box-shadow: 0 4px 10px rgba(0,0,0,.2); }
+  .score-slider::-moz-range-track { height: 12px; border-radius: 99px; background: rgba(74,44,24,.16); }
+  .score-slider::-moz-range-progress { height: 12px; border-radius: 99px; background: var(--amber); }
+  .score-slider::-moz-range-thumb { width: 28px; height: 28px; border-radius: 50%; background: var(--amber); border: 3px solid #FFF3DD; box-shadow: 0 4px 10px rgba(0,0,0,.2); }
+  .score-slider:focus-visible { outline: 3px solid var(--text); outline-offset: 6px; border-radius: 99px; }
+  .score-scale { display: flex; justify-content: space-between; color: var(--muted); font-size: .9rem; margin-top: 2px; }
+  .score-popup { min-height: 56px; display: flex; align-items: center; justify-content: center; text-align: center; margin-top: 14px; padding: 12px; border-radius: 14px; background: rgba(201,122,59,.12); color: var(--amber); line-height: 1.7; }
+  .floatup { position: absolute; font-size: 1.5rem; pointer-events: none; animation: floatUp 1s ease-out forwards; }
+  @keyframes floatUp { 0% { opacity: 1; transform: translate(-50%, 0); } 100% { opacity: 0; transform: translate(-50%, -46px); } }
+  .hunt-obj {
+    position: absolute; transform: translate(-50%, -50%);
+    font-size: 1.05rem; line-height: 1; background: none; border: 0; padding: 7px;
+    cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+    animation: flicker linear infinite;
+    filter: grayscale(40%) drop-shadow(0 0 3px rgba(255, 255, 255, .4));
+  }
+  .hunt-obj.found { animation: none; filter: none; transform: translate(-50%, -50%) scale(1.8); opacity: 0; transition: transform .4s ease, opacity .4s ease; }
+  .hunt-obj.miss { filter: brightness(1.7) grayscale(0%); }
+  .sparkle-shower { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 25; }
+  .drop { position: absolute; top: -6%; width: 7px; height: 7px; border-radius: 50%; background: #FFE3B0; box-shadow: 0 0 10px 3px rgba(201, 122, 59, .55); animation: dropFall var(--d) linear var(--dl) forwards; }
+  @keyframes dropFall { 0% { opacity: 1; } 14% { opacity: .15; } 28% { opacity: 1; } 42% { opacity: .15; } 56% { opacity: 1; } 70% { opacity: .15; } 85% { opacity: 1; } 100% { transform: translate(var(--dx), 120vh); opacity: 0; } }
+  .box-wrap { margin: 22px 0 6px; }
+  .box-emoji { font-size: 5.2rem; line-height: 1; background: none; border: 0; cursor: pointer; -webkit-tap-highlight-color: transparent; transition: transform .25s ease; touch-action: manipulation; }
+  .box-emoji:hover { transform: translateY(-3px); }
+  .box-emoji.open { transform: scale(1.12) rotate(-4deg); pointer-events: none; }
+  .box-emoji.shake { animation: boxShake .4s ease; }
+  @keyframes boxShake { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(-9deg); } 75% { transform: rotate(9deg); } }
+  .shake-hint { color: var(--muted); font-size: .92rem; margin: 8px 0 0; min-height: 1.4em; }
+  .box-lines { min-height: 96px; margin-top: 8px; }
+  .box-lines p { font-size: 1.08rem; line-height: 1.8; color: var(--text); margin: 0 0 6px; opacity: 0; transform: translateY(8px); transition: opacity .5s ease, transform .5s ease; }
+  .box-lines p.show { opacity: 1; transform: none; }
+  .box-more { opacity: 0; transition: opacity .5s ease; }
+  .box-more.show { opacity: 1; }
+  .box-bonus {
+    font-family: "Sriracha", "Noto Sans Thai Looped", Tahoma, sans-serif;
+    font-size: 1.05rem; line-height: 1.75; color: var(--amber);
+    margin: 12px auto 0; max-width: 30ch;
+    opacity: 0; transform: scale(.5);
+    transition: opacity .4s ease, transform .4s cubic-bezier(.34, 1.56, .64, 1);
+  }
+  .box-bonus.show { opacity: 1; transform: scale(1); }
+  .scratch { position: relative; width: min(100%, 380px); height: 160px; margin: 22px auto 0; border-radius: 20px; overflow: hidden; background: linear-gradient(180deg, #FBDDB2, #F3C890); border: 2px solid rgba(201, 122, 59, .5); }
+  .scratch-msg { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; padding: 14px 20px; text-align: center; font-family: "Sriracha", "Noto Sans Thai Looped", Tahoma, sans-serif; font-size: clamp(1.25rem, 5vw, 1.6rem); line-height: 1.55; color: var(--amber-ink); }
+  .scratch canvas { position: absolute; inset: 0; width: 100%; height: 100%; touch-action: none; cursor: crosshair; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; transition: opacity .6s ease; }
+  .scratch canvas:focus-visible { outline: 3px solid var(--text); outline-offset: -3px; }
+  .scratch canvas.gone { opacity: 0; pointer-events: none; }
+  .scratch-hint { color: var(--muted); font-size: .92rem; margin-top: 10px; }
+  .envelope-wrap { margin: 22px 0 4px; }
+  .envelope-btn { font-size: 4.6rem; line-height: 1; background: none; border: 0; cursor: pointer; -webkit-tap-highlight-color: transparent; transition: transform .25s ease; touch-action: manipulation; }
+  .envelope-btn:hover { transform: translateY(-3px); }
+  .envelope-btn.opened { transform: scale(1.1) rotate(-3deg); pointer-events: none; }
+  .letter-note { min-height: 100px; margin-top: 10px; }
+  .letter-note p { font-size: 1.06rem; line-height: 1.85; color: var(--text); margin: 0 0 6px; opacity: 0; transform: translateY(8px); transition: opacity .5s ease, transform .5s ease; }
+  .letter-note p.show { opacity: 1; transform: none; }
+  .final-line { font-family: "Sriracha", "Noto Sans Thai Looped", Tahoma, sans-serif; font-size: clamp(1.15rem, 4.6vw, 1.4rem); color: var(--amber); margin: 18px auto 0; max-width: 30ch; line-height: 1.6; opacity: 0; transform: translateY(6px); transition: opacity .6s ease, transform .6s ease; }
+  .final-line.show { opacity: 1; transform: none; }
+  .confetti { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 20; }
+  .confetti span { position: absolute; top: -10%; font-size: 1.4rem; animation: confettiFall var(--d) linear var(--dl) forwards; }
+  @keyframes confettiFall { to { transform: translateY(120vh) rotate(var(--r)); opacity: 0; } }
+  .modal-backdrop {
+    position: fixed; inset: 0; z-index: 30;
+    display: flex; align-items: center; justify-content: center;
+    padding: 24px;
+    background: rgba(74, 44, 24, .4);
+    -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px);
+  }
+  .modal {
+    width: min(100%, 360px);
+    text-align: center;
+    background: linear-gradient(180deg, #FFF3DD, #FBE2BC);
+    border: 2px solid rgba(201, 122, 59, .5);
+    border-radius: 24px;
+    padding: 22px 22px 24px;
+    box-shadow: 0 24px 60px rgba(74, 44, 24, .25);
+    color: #4A2C18;
+  }
+  .modal .modal-icon { font-size: 2rem; margin: 0 0 4px; }
+  .modal p {
+    font-family: "Sriracha", "Noto Sans Thai Looped", Tahoma, sans-serif;
+    font-size: clamp(1.15rem, 5vw, 1.45rem);
+    line-height: 1.6;
+    margin: 0 0 18px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .steam-g, .floatup, .hunt-obj, .stage .fleck-bg, .drop, .confetti span, .sun-btn.pulse, .sparkle, .bean-btn.falling, .box-emoji.shake { animation: none !important; }
+    .final-line, .pupil { transition: none; }
+    .scratch canvas, .box-lines p, .box-more, .box-bonus, .box-emoji, .btn, .letter-note p, .envelope-btn { transition: none; }
+  }
+</style>
+</head>
+<body>
+<main><div class="step" id="step"></div><div id="view"></div></main>
+<div class="confetti" id="confetti" aria-hidden="true"></div>
+<div class="sparkle-shower" id="shower" aria-hidden="true"></div>
+<script>
+  var TOTAL = 6;
+  var view = document.getElementById('view');
+  var stepBox = document.getElementById('step');
+  var confetti = document.getElementById('confetti');
+  var showerBox = document.getElementById('shower');
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text) e.textContent = text; return e; }
+  function rand(a, b) { return a + Math.random() * (b - a); }
+  function buildStep() { stepBox.textContent = ''; for (var i = 1; i <= TOTAL; i++) stepBox.appendChild(document.createElement('span')); }
+  function updateStep(n) { var spans = stepBox.children; for (var i = 0; i < spans.length; i++) spans[i].className = (i + 1 === n) ? 'on' : ''; }
+  function confettiBurst() {
+    if (reduceMotion) return;
+    for (var i = 0; i < 20; i++) { var s = el('span', '', i % 2 ? '🤎' : '☕'); s.style.left = (Math.random() * 96) + '%'; s.style.setProperty('--d', (2.4 + Math.random() * 1.8) + 's'); s.style.setProperty('--dl', (Math.random() * 0.8) + 's'); s.style.setProperty('--r', (Math.random() * 360) + 'deg'); confetti.appendChild(s); }
+    setTimeout(function () { confetti.textContent = ''; }, 5000);
+  }
+  function dropShower(done) {
+    if (reduceMotion) { done(); return; }
+    for (var i = 0; i < 16; i++) { var m = el('div', 'drop'); m.style.left = (Math.random() * 100) + '%'; m.style.setProperty('--d', (0.7 + Math.random() * 0.5) + 's'); m.style.setProperty('--dl', (Math.random() * 0.5) + 's'); m.style.setProperty('--dx', rand(40, 140) + 'px'); showerBox.appendChild(m); }
+    setTimeout(function () { showerBox.textContent = ''; done(); }, 1400);
+  }
+
+  function showModal(text, closeLabel, onClose) {
+    var back = el('div', 'modal-backdrop');
+    back.id = 'modal';
+    var box = el('div', 'modal');
+    box.setAttribute('role', 'dialog');
+    box.setAttribute('aria-modal', 'true');
+    box.appendChild(el('div', 'modal-icon', '☕'));
+    box.appendChild(el('p', '', text));
+    var btn = el('button', 'btn btn-main', closeLabel || 'ไปต่อ');
+    btn.type = 'button';
+    box.appendChild(btn);
+    back.appendChild(box);
+    document.body.appendChild(back);
+    btn.addEventListener('click', function () { back.remove(); if (onClose) onClose(); });
+    btn.focus({ preventScroll: true });
+  }
+
+  var CUP_SVG =
+    '<svg viewBox="0 0 200 220" role="img" aria-label="แก้วกาแฟตัวน้อยให้เล่นด้วย">' +
+    '<g class="steam-g">' +
+      '<path d="M78 86 Q70 66 82 50 Q92 36 82 20" stroke="#FBEFD9" stroke-width="5" stroke-linecap="round" fill="none" opacity=".85"/>' +
+      '<path d="M100 86 Q96 64 106 48 Q114 34 104 18" stroke="#FBEFD9" stroke-width="5" stroke-linecap="round" fill="none" opacity=".7"/>' +
+      '<path d="M122 86 Q118 66 128 50 Q136 36 126 20" stroke="#FBEFD9" stroke-width="5" stroke-linecap="round" fill="none" opacity=".85"/>' +
+      '<path class="hit-steam" d="M100 70 L100 20" stroke="#000" stroke-opacity="0" stroke-width="70" stroke-linecap="round" pointer-events="all"/>' +
+    '</g>' +
+    '<ellipse cx="100" cy="94" rx="46" ry="15" fill="#6B4226" stroke="#4A2C18" stroke-width="3"/>' +
+    '<circle cx="100" cy="92" r="5" fill="#4A2C18"/>' +
+    '<path d="M58 100 L142 100 L130 204 L70 204 Z" fill="#F6E3C5" stroke="#6B4226" stroke-width="3" stroke-linejoin="round"/>' +
+    '<path d="M66 102 L134 102" stroke="#E7C98E" stroke-width="3"/>' +
+    '<g class="eyes-open"><circle cx="84" cy="138" r="10" fill="#FFF8EC"/><circle cx="116" cy="138" r="10" fill="#FFF8EC"/><ellipse class="pupil" cx="84" cy="138" rx="3.4" ry="8" fill="#4A2C18"/><ellipse class="pupil" cx="116" cy="138" rx="3.4" ry="8" fill="#4A2C18"/></g>' +
+    '<g class="eyes-purr"><path d="M74 138 Q84 128 94 138 M106 138 Q116 128 126 138" stroke="#4A2C18" stroke-width="4.5" stroke-linecap="round" fill="none"/></g>' +
+    '<g class="eyes-annoyed"><path d="M72 128 L94 134 M128 128 L106 134" stroke="#4A2C18" stroke-width="4" stroke-linecap="round"/><circle cx="84" cy="140" r="9" fill="#FFF8EC"/><circle cx="116" cy="140" r="9" fill="#FFF8EC"/></g>' +
+    '<ellipse class="blush" cx="70" cy="150" rx="8" ry="5" fill="#F3A6A6"/><ellipse class="blush" cx="130" cy="150" rx="8" ry="5" fill="#F3A6A6"/>' +
+    '<g class="mouth-n"><path d="M100 156 Q94 164 86 159 M100 156 Q106 164 114 159" stroke="#8A5A33" stroke-width="3" stroke-linecap="round" fill="none"/></g>' +
+    '<g class="mouth-purr"><path d="M86 158 Q100 172 114 158 Z" fill="#7A3B1E" stroke="#8A5A33" stroke-width="2.5" stroke-linejoin="round"/></g>' +
+    '<g class="mouth-annoyed"><path d="M88 160 Q100 152 112 160" stroke="#8A5A33" stroke-width="3.5" stroke-linecap="round" fill="none"/></g>' +
+    '<path d="M82 98 Q90 84 100 98 Q110 84 118 98 Z" fill="#FFF8EC" stroke="#E7C98E" stroke-width="2"/>' +
+    '<path class="hit-body" d="M58 100 L142 100 L130 204 L70 204 Z" fill="#000" fill-opacity="0" pointer-events="all"/>' +
+    '<path class="hit-foam" d="M82 98 Q90 84 100 98 Q110 84 118 98 Z" fill="#000" fill-opacity="0" pointer-events="all"/>' +
+    '</svg>';
+  var BODY_LINES = ['อุ่นสบายจังเลยครับ', 'เคลิ้มไปเลยครับเนี่ย', 'ชอบมากเลยครับ 😳', 'หอมกรุ่นววว~'];
+  var STEAM_LINES = ['ไอร้อนลอยฟุ้งเลย', 'จั๊กจี้นิดนึงนะครับ', 'หอมกาแฟฟุ้งไปทั่วเลย'];
+  var FOAM_LINES = ['อย่าจิ้มฟองสิครับ!', 'อย่าจิ้มฟองสิครับ!', 'ฟองหายหมดแล้วเนี่ย!'];
+  var SUN_PHASES = ['☀️', '🌤️', '⛅', '🌥️', '🌞'];
+  var BEAN_SECRETS = [
+    'เมล็ดแรก: ผมคั่วความคิดถึงไว้ให้คุณทุกเช้าเลยครับ ☕',
+    'เมล็ดที่สอง: แก้วนี้ชงจากใจผมล้วนๆ เลยนะครับ 😳',
+    'เมล็ดสุดท้าย: แก้วกาแฟว่าหอมแล้ว แก้มผมหอมกว่านะครับอ้วง 🥰'
+  ];
+  var LEAF_SECRETS = [
+    'ใบมินต์นี้แทนความสดชื่นในทุกวันที่คุยกับคุณครับ 🍃',
+    'ใบสุดท้าย: มีคุณแล้วมันดีไปหมดเลยครับ 🌿'
+  ];
+  function spawnFloat(host, text, xPct) { var f = el('span', 'floatup', text); f.style.left = xPct + '%'; f.style.top = '4%'; host.appendChild(f); setTimeout(function () { f.remove(); }, 1000); }
+
+  var eyeTrackHandler = null;
+  function initEyeTracking(charWrap) {
+    if (eyeTrackHandler) window.removeEventListener('pointermove', eyeTrackHandler);
+    var pupils = charWrap.querySelectorAll('.pupil');
+    if (!pupils.length) return;
+    eyeTrackHandler = function (e) {
+      if (charWrap.getAttribute('data-mood')) return;
+      var r = charWrap.getBoundingClientRect();
+      var cx = r.left + r.width * 0.5, cy = r.top + r.height * 0.62;
+      var dx = e.clientX - cx, dy = e.clientY - cy;
+      var d = Math.hypot(dx, dy) || 1;
+      var k = Math.min(1, d / 260) * 3;
+      for (var i = 0; i < pupils.length; i++) { pupils[i].style.transform = 'translate(' + (dx / d * k) + 'px,' + (dy / d * k * 0.7) + 'px)'; }
+    };
+    window.addEventListener('pointermove', eyeTrackHandler);
+  }
+
+  function renderIntro() {
+    updateStep(1); view.textContent = '';
+    var wrap = el('div'); wrap.appendChild(el('h1', '', 'ชวนดื่มกาแฟยามเช้าไหมครับ?')); wrap.appendChild(el('p', 'sub', 'ร้านกาแฟเล็กๆ เพิ่งชงแก้วใหม่เสร็จพอดีเลยครับ'));
+    var actions = el('div', 'actions'); var go = el('button', 'btn btn-main', 'สั่งเลย ☕'); go.type = 'button'; actions.appendChild(go); wrap.appendChild(actions); view.appendChild(wrap);
+    go.addEventListener('click', startCafe);
+  }
+  function startCafe() {
+    view.textContent = ''; view.appendChild(el('h1', '', 'ทักทายแก้วกาแฟหน่อยสิครับ')); view.appendChild(el('p', 'sub', 'ลูบตัวแก้ว เป่าไอร้อน จิ้มฟองนม หรือแตะดวงอาทิตย์กับเมล็ดกาแฟดูก็ได้นะครับ'));
+    var stage = el('div', 'stage cup-stage'); var sun = el('button', 'sun-btn', SUN_PHASES[0]); sun.type = 'button'; sun.setAttribute('aria-label', 'ดวงอาทิตย์'); var sunIdx = 0; stage.appendChild(sun);
+    var beans = []; var beanSlots = [[10, 12], [24, 26], [76, 14], [90, 30]];
+    beanSlots.forEach(function (pos) { var b = el('button', 'bean-btn', '🫘'); b.type = 'button'; b.setAttribute('aria-label', 'เมล็ดกาแฟ'); b.style.left = pos[0] + '%'; b.style.top = pos[1] + '%'; stage.appendChild(b); beans.push(b); });
+    var charWrap = el('div', 'char-wrap'); charWrap.innerHTML = CUP_SVG; stage.appendChild(charWrap); view.appendChild(stage);
+    initEyeTracking(charWrap);
+    var askMore = null; view.appendChild(el('p', 'sub', 'เล่นด้วยกันแล้ว 0 ครั้ง')); var playsLine = view.lastChild; playsLine.className = 'counter';
+    var moodTimer = null;
+    function setMood(m, ms) { charWrap.setAttribute('data-mood', m); clearTimeout(moodTimer); moodTimer = setTimeout(function () { charWrap.removeAttribute('data-mood'); }, ms || 500); }
+    var plays = 0, nextPrompt = 5, finished = false;
+    function played() { if (finished) return; plays++; playsLine.textContent = 'เล่นด้วยกันแล้ว ' + plays + ' ครั้ง'; if (plays >= nextPrompt && !askMore) showAskMore(); }
+    function showAskMore() {
+      askMore = el('div', 'ask-more'); askMore.appendChild(el('p', '', 'เล่นกับแก้วกาแฟเสร็จแล้วหรือยังครับ?')); var row = el('div', 'actions');
+      var more = el('button', 'btn btn-alt', 'เล่นต่อ'); more.type = 'button'; var stop = el('a', 'btn btn-main', 'พอแล้วครับ'); stop.href = '#hunt'; row.appendChild(more); row.appendChild(stop); askMore.appendChild(row); view.appendChild(askMore);
+      more.addEventListener('click', function () { askMore.remove(); askMore = null; nextPrompt = plays + 5; });
+    }
+    function flickSteam() { var st = charWrap.querySelector('.steam-g'); if (!st) return; st.classList.remove('flick'); void st.offsetWidth; st.classList.add('flick'); clearTimeout(st._t); st._t = setTimeout(function () { st.classList.remove('flick'); }, 850); }
+    charWrap.querySelector('.hit-body').addEventListener('click', function () { flickSteam(); setMood('purr', 450); spawnFloat(charWrap, BODY_LINES[Math.floor(Math.random() * BODY_LINES.length)], 40); played(); });
+    charWrap.querySelector('.hit-steam').addEventListener('click', function () { flickSteam(); spawnFloat(charWrap, STEAM_LINES[Math.floor(Math.random() * STEAM_LINES.length)], 55); played(); });
+    charWrap.querySelector('.hit-foam').addEventListener('click', function () { flickSteam(); setMood('annoyed', 500); spawnFloat(charWrap, FOAM_LINES[Math.floor(Math.random() * FOAM_LINES.length)], 50); played(); });
+    var MAX_SPARKLE = 40, sparkles = [];
+    sun.addEventListener('click', function () { flickSteam(); sunIdx = (sunIdx + 1) % SUN_PHASES.length; sun.textContent = SUN_PHASES[sunIdx]; sun.classList.remove('pulse'); void sun.offsetWidth; sun.classList.add('pulse');
+      for (var i = 0; i < 18; i++) { var t = el('div', 'sparkle bright'); var sz = rand(2, 4.5); t.style.width = sz + 'px'; t.style.height = sz + 'px'; t.style.left = rand(3, 97) + '%'; t.style.top = rand(3, 92) + '%'; stage.insertBefore(t, sun); sparkles.push(t); if (sparkles.length > MAX_SPARKLE) sparkles.shift().remove(); } played(); });
+    var beanClicks = 0;
+    beans.forEach(function (b) { b.addEventListener('click', function () { if (b.classList.contains('falling')) return; flickSteam(); b.classList.add('falling'); played(); beanClicks++; if (beanClicks % 5 === 0) dropShower(function () {});
+      setTimeout(function () { b.style.left = rand(8, 92) + '%'; b.style.top = rand(8, 42) + '%'; b.classList.remove('falling'); }, 560); }); });
+  }
+
+  function scatterPoints(n, existing) {
+    var pts = existing ? existing.slice() : [];
+    var out = [];
+    for (var k = 0; k < n; k++) {
+      var best = null;
+      for (var attempt = 0; attempt < 60; attempt++) {
+        var x = rand(8, 92), y = rand(8, 90);
+        var ok = pts.every(function (p) { return Math.hypot(p.left - x, p.top - y) > 11; });
+        if (ok) { best = { left: x, top: y }; break; }
+        if (!best) best = { left: x, top: y };
+      }
+      pts.push(best); out.push(best);
+    }
+    return out;
+  }
+  var HUNT_TOTAL = 5;
+  function huntPositions() {
+    var types = ['bean', 'bean', 'bean', 'leaf', 'leaf'];
+    for (var i = types.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = types[i]; types[i] = types[j]; types[j] = t; }
+    var pos = scatterPoints(HUNT_TOTAL, []);
+    return pos.map(function (p, i) { return { type: types[i], left: p.left, top: p.top }; });
+  }
+  function renderHunt() {
+    updateStep(2); view.textContent = ''; view.appendChild(el('h1', '', '☕ Secret Hunt')); view.appendChild(el('p', 'sub', 'ผมซ่อนเมล็ดกาแฟกับใบมินต์ไว้ในฟองนมเพียบเลยครับ ลองหาของจริงให้เจอดูสิ'));
+    var stage = el('div', 'stage'); for (var i = 0; i < 16; i++) { var f = el('div', 'fleck-bg'); var sz = rand(1, 2.4); f.style.width = sz + 'px'; f.style.height = sz + 'px'; f.style.left = rand(4, 96) + '%'; f.style.top = rand(4, 90) + '%'; f.style.animationDuration = rand(1.6, 3.4) + 's'; f.style.animationDelay = rand(0, 3) + 's'; stage.appendChild(f); }
+    view.appendChild(stage); var counter = el('p', 'counter', 'เจอแล้ว 0 / ' + HUNT_TOTAL); view.appendChild(counter);
+    var found = 0, beansSeen = 0, leavesSeen = 0, pendingComplete = false;
+
+    function finishHunt() {
+      dropShower(function () {
+        view.textContent = '';
+        view.appendChild(el('h1', '', 'เก่งจังครับ 🖤'));
+        view.appendChild(el('p', 'sub', 'ดูเหมือนคุณจะหาของที่ผมซ่อนได้เก่งกว่าที่คิดนะครับอ้วง ☕'));
+        var actions = el('div', 'actions'); var go = el('a', 'btn btn-main', 'ไปต่อ'); go.href = '#gift'; actions.appendChild(go); view.appendChild(actions);
+      });
+    }
+
+    var realItems = huntPositions();
+    var realPts = realItems.map(function (p) { return { left: p.left, top: p.top }; });
+    var decoyTypes = ['bean', 'bean', 'bean', 'bean', 'bean', 'bean', 'leaf', 'leaf', 'leaf', 'leaf', 'leaf', 'leaf'];
+    var decoyPts = scatterPoints(decoyTypes.length, realPts);
+
+    function makeGlyph(type) { var g = el('button', 'hunt-obj', type === 'bean' ? '🫘' : '🍃'); g.type = 'button'; g.style.animationDuration = rand(1.6, 3.4) + 's'; g.style.animationDelay = rand(0, 3) + 's'; return g; }
+
+    decoyTypes.forEach(function (type, i) {
+      var d = makeGlyph(type); d.classList.add('decoy');
+      d.style.left = decoyPts[i].left + '%'; d.style.top = decoyPts[i].top + '%';
+      d.setAttribute('aria-label', 'จุดปลอม');
+      d.addEventListener('click', function () { d.classList.add('miss'); setTimeout(function () { d.classList.remove('miss'); }, 300); });
+      stage.appendChild(d);
+    });
+
+    realItems.forEach(function (p) {
+      var obj = makeGlyph(p.type); obj.style.left = p.left + '%'; obj.style.top = p.top + '%'; obj.setAttribute('aria-label', p.type === 'bean' ? 'เมล็ดกาแฟ' : 'ใบมินต์');
+      obj.addEventListener('click', function onFound() {
+        obj.removeEventListener('click', onFound); obj.classList.add('found'); found++; counter.textContent = 'เจอแล้ว ' + found + ' / ' + HUNT_TOTAL;
+        var secrets = p.type === 'leaf' ? LEAF_SECRETS : BEAN_SECRETS;
+        var idx = p.type === 'leaf' ? leavesSeen++ : beansSeen++;
+        var msg = secrets[idx % secrets.length];
+        if (found >= HUNT_TOTAL) pendingComplete = true;
+        setTimeout(function () { showModal(msg, 'ไปต่อ', function () { if (pendingComplete) setTimeout(finishHunt, 200); }); }, 250);
+      });
+      stage.appendChild(obj);
+    });
+  }
+
+  function renderGift() {
+    updateStep(3); view.textContent = ''; view.appendChild(el('h1', '', 'มารับรางวัลคนเก่งเร็วครับ')); view.appendChild(el('p', 'sub', 'ผมมีของเล็กๆ จะให้'));
+    var boxWrap = el('div', 'box-wrap'); var box = el('button', 'box-emoji', '🍪'); box.type = 'button'; box.setAttribute('aria-label', 'เขย่ากล่องคุกกี้'); boxWrap.appendChild(box); view.appendChild(boxWrap);
+    var shakeHint = el('p', 'shake-hint', 'ลองเขย่าดูสิครับ'); view.appendChild(shakeHint);
+    var lines = el('div', 'box-lines'); view.appendChild(lines); var more = el('p', 'box-more', 'ยังมีอีกอย่างครับ…'); view.appendChild(more);
+    var actions = el('div', 'actions'); var go = el('a', 'btn btn-main', 'ดูนี่สิ'); go.href = '#letter'; go.style.display = 'none'; actions.appendChild(go); view.appendChild(actions);
+
+    var shakeCount = 0, NEED_SHAKES = 3;
+    box.addEventListener('click', function shakeOrOpen() {
+      if (shakeCount < NEED_SHAKES) {
+        shakeCount++;
+        box.classList.remove('shake'); void box.offsetWidth; box.classList.add('shake');
+        var left = NEED_SHAKES - shakeCount;
+        shakeHint.textContent = left > 0 ? ('เขย่าอีก ' + left + ' ครั้งนะครับ') : 'เปิดได้แล้วครับ!';
+        if (left > 0) return;
+      }
+      box.removeEventListener('click', shakeOrOpen);
+      box.classList.add('open');
+      shakeHint.textContent = '';
+      confettiBurst();
+      var texts = ['ไม่มีอะไรหรอกครับ…', 'แค่อยากแกล้งคุณเฉยๆ', 'ชอบผมเยอะๆนะครับอ้วง 😳'];
+      texts.forEach(function (t, i) { setTimeout(function () { var p = el('p', '', t); lines.appendChild(p); requestAnimationFrame(function () { p.classList.add('show'); }); }, 500 + i * 1100); });
+      var bonus = el('p', 'box-bonus', '🎉 ของแถม: กาแฟแก้วนี้ผมชงเองกับมือเลยนะครับ หวังว่าจะถูกใจคุณนะครับ 😳');
+      view.insertBefore(bonus, more);
+      var afterLines = 500 + texts.length * 1100;
+      setTimeout(function () { bonus.classList.add('show'); confettiBurst(); }, afterLines + 300);
+      setTimeout(function () { more.classList.add('show'); go.style.display = 'inline-flex'; go.focus({ preventScroll: true }); }, afterLines + 1100);
+    });
+  }
+
+  function renderLetter() {
+    updateStep(4); view.textContent = ''; view.appendChild(el('h1', '', 'มีจดหมายจากผมด้วยนะครับ')); view.appendChild(el('p', 'sub', 'ก่อนไปต่อ อยากให้คุณอ่านอะไรสักหน่อยครับ'));
+    var wrap = el('div', 'envelope-wrap'); var envelope = el('button', 'envelope-btn', '💌'); envelope.type = 'button'; envelope.setAttribute('aria-label', 'เปิดจดหมาย'); wrap.appendChild(envelope); view.appendChild(wrap);
+    var note = el('div', 'letter-note'); view.appendChild(note);
+    var actions = el('div', 'actions'); var go = el('a', 'btn btn-main', 'ไปต่อ'); go.href = '#score'; go.style.display = 'none'; actions.appendChild(go); view.appendChild(actions);
+    envelope.addEventListener('click', function open() {
+      envelope.removeEventListener('click', open); envelope.classList.add('opened');
+      var lines = ['ถึงฮายของผม,', 'ขอบคุณที่แวะมานั่งคุยกันเช้านี้นะครับ', 'กาแฟแก้วนี้อุ่นแค่ไหน ก็ยังไม่เท่าใจผมตอนได้อยู่กับคุณเลยครับ 😳'];
+      lines.forEach(function (t, i) { setTimeout(function () { var p = el('p', '', t); note.appendChild(p); requestAnimationFrame(function () { p.classList.add('show'); }); }, 500 + i * 900); });
+      setTimeout(function () { go.style.display = 'inline-flex'; go.focus({ preventScroll: true }); }, 500 + lines.length * 900 + 400);
+    });
+  }
+
+  function paintFoil(ctx, W, H) {
+    var g = ctx.createLinearGradient(0, 0, W, H); g.addColorStop(0, '#E7C99A'); g.addColorStop(0.45, '#C9A06A'); g.addColorStop(1, '#DAB887'); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+    ctx.save(); ctx.rotate(-0.35); ctx.fillStyle = 'rgba(255,255,255,.18)'; for (var i = -2; i < 9; i++) ctx.fillRect(i * 70, -40, 22, H * 2.4); ctx.restore();
+    for (var s = 0; s < 420; s++) { ctx.fillStyle = s % 2 ? 'rgba(255,255,255,.2)' : 'rgba(80,50,20,.1)'; ctx.fillRect(Math.random() * W, Math.random() * H, 1.6, 1.6); }
+    ctx.strokeStyle = 'rgba(255,255,255,.4)'; ctx.lineWidth = 2; ctx.strokeRect(1, 1, W - 2, H - 2);
+  }
+  function makeScratch(wrap, canvas, threshold, onReveal) {
+    var ctx = canvas.getContext && canvas.getContext('2d'); if (!ctx) { canvas.classList.add('gone'); onReveal(); return; }
+    var dpr = Math.min(window.devicePixelRatio || 1, 2); var rect = wrap.getBoundingClientRect(); var W = Math.max(1, Math.round(rect.width)), H = Math.max(1, Math.round(rect.height));
+    canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr); ctx.scale(dpr, dpr); paintFoil(ctx, W, H);
+    var drawing = false, last = null, done = false, lastCheck = 0; var BRUSH = 34;
+    function pos(e) { var r = canvas.getBoundingClientRect(); return { x: (e.clientX - r.left) * (W / (r.width || W)), y: (e.clientY - r.top) * (H / (r.height || H)) }; }
+    function stroke(a, b) { ctx.globalCompositeOperation = 'destination-out'; ctx.strokeStyle = '#000'; ctx.lineWidth = BRUSH; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke(); }
+    function ratio() { var w = canvas.width, h = canvas.height; var data = ctx.getImageData(0, 0, w, h).data; var step = 4, total = 0, clear = 0; for (var y = 0; y < h; y += step) for (var x = 0; x < w; x += step) { total++; if (data[(y * w + x) * 4 + 3] < 32) clear++; } return total ? clear / total : 0; }
+    function reveal() { if (done) return; done = true; drawing = false; canvas.classList.add('gone'); onReveal(); }
+    function check(force) { if (done) return; var now = Date.now(); if (!force && now - lastCheck < 120) return; lastCheck = now; if (ratio() >= threshold) reveal(); }
+    function end() { if (!drawing) return; drawing = false; last = null; check(true); }
+    canvas.addEventListener('pointerdown', function (e) { if (done) return; drawing = true; last = pos(e); stroke(last, last); try { canvas.setPointerCapture(e.pointerId); } catch (err) {} e.preventDefault(); });
+    canvas.addEventListener('pointermove', function (e) { if (!drawing || done) return; if (e.pointerType === 'mouse' && e.buttons === 0) { end(); return; } var p = pos(e); stroke(last, p); last = p; check(false); e.preventDefault(); });
+    canvas.addEventListener('pointerup', end); canvas.addEventListener('pointercancel', end); canvas.addEventListener('touchmove', function (e) { e.preventDefault(); }, { passive: false });
+    canvas.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); reveal(); } });
+  }
+  function renderScore() {
+    updateStep(5); view.textContent = '';
+    var scoreCard = el('section', 'score-card'); scoreCard.appendChild(el('p', 'score-title', 'ช่วยบอกผมทีว่าชอบกาแฟแก้วนี้แค่ไหน จาก 0-100? 🥺'));
+    var scoreValue = el('output', 'score-value', '50'); scoreValue.setAttribute('aria-live', 'polite'); scoreCard.appendChild(scoreValue);
+    var slider = document.createElement('input'); slider.type = 'range'; slider.min = '0'; slider.max = '100'; slider.value = '50'; slider.step = '1'; slider.className = 'score-slider'; slider.setAttribute('aria-label', 'ระดับความชอบ 0 ถึง 100'); scoreCard.appendChild(slider);
+    var scale = el('div', 'score-scale'); scale.appendChild(el('span', '', '0')); scale.appendChild(el('span', '', '100')); scoreCard.appendChild(scale);
+    var scorePopup = el('div', 'score-popup', ''); scorePopup.setAttribute('aria-live', 'polite'); scoreCard.appendChild(scorePopup); view.appendChild(scoreCard);
+    function updateScore() {
+      var score = Number(slider.value); slider.style.setProperty('--pct', score + '%'); scoreValue.textContent = String(score);
+      if (score === 0) scorePopup.textContent = 'เดี๋ยวต้องชอบผมบ้างซักวันแหละ 🥲';
+      else if (score === 8) scorePopup.textContent = 'ชอบวันเกิดผมหรอ หรือชอบผมนะ 🤭';
+      else if (score === 100) scorePopup.textContent = 'ชอบมากเลยครับ อีก 100 ปีอย่าลืมมาเซ็นต์นะครับ 🤭';
+      else if (score <= 25) scorePopup.textContent = 'ฮั่นแน่ ชอบผมบ้างแล้วหรอ ☺️';
+      else if (score === 26) scorePopup.textContent = 'จำได้ด้วยหรอครับว่าเราเจอกันครั้งแรกวันนี้ 😳';
+      else if (score <= 50) scorePopup.textContent = 'แน่ะ ชอบผมแล้วอ่ะดิ 🤭';
+      else if (score === 68) scorePopup.textContent = 'รู้ครับว่าชอบเลข 8 🤭';
+      else if (score === 69) scorePopup.textContent = 'แน่ะ ชอบเลขนี้หรอครับ 🤭';
+      else if (score <= 75) scorePopup.textContent = 'อุ้ย ชอบมากกว่าครึ่งแล้วด้วยหรอครับ 🤭';
+      else if (score === 88) scorePopup.textContent = 'ขอให้ชอบผมแบบ infinity เลยนะครับ 🤭';
+      else scorePopup.textContent = 'หลวมตัวลงมาแล้ว ไม่ให้ขึ้นไปแล้วนะครับ 😳';
+    }
+    slider.addEventListener('input', updateScore); updateScore();
+    var actions = el('div', 'actions'); var go = el('a', 'btn btn-main', 'ไปขูดเปิดข้อความลับ ✨'); go.href = '#final'; actions.appendChild(go); view.appendChild(actions);
+  }
+  function renderFinal() {
+    updateStep(6); view.textContent = ''; view.appendChild(el('h1', '', 'ขอพื้นที่บอกอะไรหน่อยครับ')); view.appendChild(el('p', 'sub', 'ผมอยากบอกจริงๆ แล้วครับ'));
+    var wrap = el('div', 'scratch'); var msg = el('div', 'scratch-msg', 'ผมชงกาแฟแก้วนี้ด้วยใจทั้งหมดเลยครับ ผมชอบคุณนะ 😳'); var canvas = document.createElement('canvas'); canvas.tabIndex = 0; canvas.setAttribute('aria-label', 'ขูดเพื่อเปิดข้อความ'); wrap.appendChild(msg); wrap.appendChild(canvas); view.appendChild(wrap); view.appendChild(el('p', 'scratch-hint', 'ลองขูดที่กล่องด้านบนดูสิครับ'));
+    makeScratch(wrap, canvas, 0.8, function () { var hint = view.querySelector('.scratch-hint'); if (hint) hint.remove(); confettiBurst(); var line = el('p', 'final-line', 'รับเป็นแฟนกาแฟคู่ใจผม 1 วันได้ไหมครับเบบี๋ 🖤'); view.appendChild(line); requestAnimationFrame(function () { line.classList.add('show'); }); });
+  }
+  var PAGES = { play: startCafe, hunt: renderHunt, gift: renderGift, letter: renderLetter, score: renderScore, final: renderFinal };
+  function route() { var h = (location.hash || '').replace('#', ''); (PAGES[h] || renderIntro)(); }
+  buildStep(); window.addEventListener('hashchange', route); route();
+</script>
+</body>
+</html>
