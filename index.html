@@ -473,18 +473,31 @@
     var scorePopup = el('div', 'score-popup', ''); scorePopup.setAttribute('aria-live', 'polite'); scoreCard.appendChild(scorePopup); view.appendChild(scoreCard);
     function updateScore() {
       var score = Number(slider.value); slider.style.setProperty('--pct', score + '%'); scoreValue.textContent = String(score);
-      if (score === 0) scorePopup.textContent = 'เดี๋ยวต้องชอบผมบ้างซักวันแหละ 🥲';
-      else if (score === 8) scorePopup.textContent = 'ชอบวันเกิดผมหรอ หรือชอบผมนะ 🤭';
-      else if (score === 99) scorePopup.textContent = 'อีก 1% ที่เหลือ ผมขอไว้ที่ผมเหมือนกันได้ไหมครับอ้วง 🤭';
-      else if (score === 100) scorePopup.textContent = 'ชอบมากเลยครับ อีก 100 ปีอย่าลืมมาเซ็นต์นะครับ 🤭';
-      else if (score <= 25) scorePopup.textContent = 'ฮั่นแน่ ชอบผมบ้างแล้วหรอ ☺️';
-      else if (score === 26) scorePopup.textContent = 'จำได้ด้วยหรอครับว่าเราเจอกันครั้งแรกวันนี้ 😳';
-      else if (score <= 50) scorePopup.textContent = 'แน่ะ ชอบผมแล้วอ่ะดิ 🤭';
-      else if (score === 68) scorePopup.textContent = 'รู้ครับว่าชอบเลข 8 🤭';
-      else if (score === 69) scorePopup.textContent = 'แน่ะ ชอบเลขนี้หรอครับ 🤭';
-      else if (score <= 75) scorePopup.textContent = 'อุ้ย ชอบมากกว่าครึ่งแล้วด้วยหรอครับ 🤭';
-      else if (score === 88) scorePopup.textContent = 'ขอให้ชอบผมแบบ infinity เลยนะครับ 🤭';
-      else scorePopup.textContent = 'หลวมตัวลงมาแล้ว ไม่ให้ขึ้นไปแล้วนะครับ 😳';
+        if (score === 0) {
+    scorePopup.textContent = 'เดี๋ยวต้องชอบผมบ้างซักวันแหละ 🥲';
+  } else if (score === 8) {
+    scorePopup.textContent = 'ชอบวันเกิดผมหรอ หรือชอบผมนะ 🤭';
+  } else if (score === 26) {
+    scorePopup.textContent = 'จำได้ด้วยหรอครับว่าเราเจอกันครั้งแรกวันนี้ 😳';
+  } else if (score === 68) {
+    scorePopup.textContent = 'รู้ครับว่าชอบเลข 8 🤭';
+  } else if (score === 69) {
+    scorePopup.textContent = 'แน่ะ ชอบเลขนี้หรอครับ 🤭';
+  } else if (score === 88) {
+    scorePopup.textContent = 'ขอให้ชอบผมแบบ infinity เลยนะครับ 🤭';
+  } else if (score === 99) {
+    scorePopup.textContent = 'อีก 1% ที่เหลือ ผมขอไว้ที่ผมเหมือนกันได้ไหมครับอ้วง 🤭';
+  } else if (score === 100) {
+    scorePopup.textContent = 'ชอบมากเลยครับ อีก 100 ปีอย่าลืมมาเซ็นต์นะครับ 🤭';
+  } else if (score <= 25) {
+    scorePopup.textContent = 'ฮั่นแน่ ชอบผมบ้างแล้วหรอ ☺️';
+  } else if (score <= 50) {
+    scorePopup.textContent = 'แน่ะ ชอบผมแล้วอ่ะดิ 🤭';
+  } else if (score <= 75) {
+    scorePopup.textContent = 'อุ้ย ชอบมากกว่าครึ่งแล้วด้วยหรอครับ 🤭';
+  } else {
+    scorePopup.textContent = 'หลวมตัวลงมาแล้ว ไม่ให้ขึ้นไปแล้วนะครับ 😳';
+  }
     }
     slider.addEventListener('input', updateScore); updateScore();
     var actions = el('div', 'actions'); var go = el('a', 'btn btn-main', 'ไปขูดเปิดข้อความลับ ✨'); go.href = '#final'; actions.appendChild(go); view.appendChild(actions);
